@@ -5,12 +5,15 @@ import (
 	"database/sql"
 	"flag"
 	"fmt"
+	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
-	_ "github.com/lib/pq"
+	"joylanguageschool.ru/pkg/models/mysql"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 type config struct {
@@ -18,15 +21,17 @@ type config struct {
 	env string
 	db struct {
 		dsn string
-		maxOpenConns int
-		maxIdleConns int
-		maxIdleTime string
+		SetMaxOpenConns int
+		SetMaxIdleConns int
+		SetMaxIdleTime string
 		}
 }
 
 type application struct {
 	config config
 	logger *log.Logger
+	posts *mysql.PostModel
+	templateCache map[string]*template.Template
 }
 
 func main() {
@@ -35,11 +40,11 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 4000, "HTTP network address")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 
-	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "PostgreSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "MYSQL DSN")
 
-	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
-	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
-	flag.StringVar(&cfg.db.maxIdleTime, "db-max-idle-time", "15m", "PostgreSQL max connection idle time")
+	flag.IntVar(&cfg.db.SetMaxOpenConns, "db-max-open-conns", 25, "MYSQL max open connections")
+	flag.IntVar(&cfg.db.SetMaxIdleConns, "db-max-idle-conns", 25, "MYSQL max idle connections")
+	flag.StringVar(&cfg.db.SetMaxIdleTime, "db-max-idle-time", "15m", "MYSQL max connection idle time")
 
 	flag.Parse()
 
@@ -52,11 +57,20 @@ func main() {
 
 	defer db.Close()
 
+	// Initialize a new template cache
+	templateCache, err := newTemplateCache("./ui/html/")
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	logger.Printf("database connection pool established")
 
+	// Application dependencies
 	app := &application{
 		config: cfg,
 		logger: logger,
+		posts: &mysql.PostModel{DB: db},
+		templateCache: templateCache,
 	}	
 
 	srv := &http.Server{
@@ -75,7 +89,7 @@ func main() {
 }
 
 func openDB(cfg config) (*sql.DB, error) {
-	db, err := sql.Open("postgres", cfg.db.dsn)
+	db, err := sql.Open("mysql", cfg.db.dsn)
 	if err != nil {
 		return nil, err
 	}

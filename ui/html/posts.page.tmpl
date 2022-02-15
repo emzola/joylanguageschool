@@ -1,0 +1,67 @@
+{{template "pagelayout" .}}
+
+{{define "title"}}Новости{{end}}
+
+{{define "pageheadertitle"}}
+<h2>Новости</h2>
+{{end}}
+
+{{define "breadcrumbs"}}
+<ul>
+<li>
+    <a href="/">Главная</a>
+</li>
+<li>Новости</li>
+</ul>
+{{end}}
+
+{{define "pagebody"}}
+
+{{if .Posts}}
+
+<!-- Start Blog Section -->
+    <section class="blog-section ptb-100">
+      <div class="container">
+        <div class="row">
+        {{range .Posts}}
+          <div class="col-lg-4 col-md-6">
+            <div class="blog-item">
+              <div class="blog-image">
+                <a href="single-blog.html">
+                  <img src="assets/img/blog/7.jpg" alt="image" />
+                </a>
+              </div>
+              <div class="single-blog-item">
+                <div class="blog-content">
+                  <a href="/post/{{.ID}}">
+                    <h3>{{.Title}}</h3>
+                  </a>
+                </div>
+                <ul class="blog-list">
+                  <li>
+                    <a href="#">
+                      <i class="flaticon-appointment"></i>
+                      {{.Created.Format "Mon Jan 2"}}
+                    </a>
+                  </li>
+                  <li>
+                    <i class="flaticon-user"></i>
+                    Janathon Doe
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          {{end}}
+        </div>
+      </div>
+    </section>
+    <!-- End Blog Section -->
+
+{{else}}
+<p>Здесь не на что смотреть... пока!</p>
+{{end}}
+
+{{template "contact" .}}
+
+{{end}}

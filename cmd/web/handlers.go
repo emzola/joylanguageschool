@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
+
+	"joylanguageschool.ru/pkg/models"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -12,27 +14,17 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	files := []string{
-		"./ui/html/home.page.tmpl",
-		"./ui/html/home.layout.tmpl",
-		"./ui/html/contact.partial.tmpl",
-		"./ui/html/footer.partial.tmpl",
+	p, err := app.posts.Latest()
+	if err != nil {
+		app.serverError(w, err)
+		return 
 	}
 
-	app.parseTemplateFiles(w, files)
-
+	app.render(w, r, "home.page.tmpl", &templateData{Posts: p})
 }
 
 func (app *application) showTeachers(w http.ResponseWriter, r *http.Request) {
-	files := []string{
-		"./ui/html/prepodavateli.page.tmpl",
-		"./ui/html/page.layout.tmpl",
-		"./ui/html/pageheader.partial.tmpl",
-		"./ui/html/contact.partial.tmpl",
-		"./ui/html/footer.partial.tmpl",
-	}
-
-	app.parseTemplateFiles(w, files)
+	app.render(w, r, "prepodavateli.page.tmpl", nil)
 }
 
 func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +33,17 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 		return
 	}
-	fmt.Fprintf(w, "Show a specific post with ID %d", id)
+
+	p, err := app.posts.Get(id)
+	if err == models.ErrNoRecord {
+		app.notFound(w)
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.render(w, r, "single_post.page.tmpl", &templateData{Post: p})
 }
 
 func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
@@ -50,5 +52,24 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, http.StatusMethodNotAllowed)
 		return
 	}
-	w.Write([]byte("Create a new post"))
+
+	title := "O snail"
+	content := "O snail\nClimb Mount Fuji,\nBut slowly, slowly!\n\n– Kobayashi"
+
+	id, err := app.posts.Insert(title, content)
+	if err != nil {
+		app.serverError(w, err)
+	}
+	
+	http.Redirect(w, r, fmt.Sprintf("/post?id=%d", id), http.StatusSeeOther)
+}
+
+func (app *application) showPosts(w http.ResponseWriter, r *http.Request) {
+	p, err := app.posts.GetAll()
+	if err != nil {
+		app.serverError(w, err)
+		return 
+	}
+
+	app.render(w, r, "post.page.tmpl", &templateData{Posts: p})
 }

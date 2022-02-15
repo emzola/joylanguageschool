@@ -608,101 +608,37 @@
         </div>
 
         <div class="row">
+        {{range .Posts}}
           <div class="col-lg-4 col-md-6">
             <div class="blog-item">
               <div class="blog-image">
-                <a href="#">
-                  <img src="static/img/blog/1.jpg" alt="image" />
+                <a href="single-blog.html">
+                  <img src="assets/img/blog/7.jpg" alt="image" />
                 </a>
               </div>
               <div class="single-blog-item">
                 <div class="blog-content">
-                  <a href="#">
-                    <h3>Школа иностранных языков JOY открывает новый филиал</h3>
+                  <a href="/post/{{.ID}}">
+                    <h3>{{.Title}}</h3>
                   </a>
-                  <p>
-                    Привет, Друзья! У нас отличные новости! Школа иностранных
-                    языков JOY открывает новый филиал в г. Нижний Новгород
-                  </p>
-                </div>
-                <ul class="blog-list">
-                  <li>
-                    <a href="single-blog.html">
-                      <i class="flaticon-user"></i>
-                      JOY
-                    </a>
-                  </li>
-                  <li>
-                    <i class="flaticon-appointment"></i>
-                    03 January 2021
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-lg-4 col-md-6">
-            <div class="blog-item">
-              <div class="blog-image">
-                <a href="#">
-                  <img src="static/img/blog/2.jpg" alt="image" />
-                </a>
-              </div>
-              <div class="single-blog-item">
-                <div class="blog-content">
-                  <a href="#">
-                    <h3>Получи сертификат TEFL TESOL</h3>
-                  </a>
-                  <p>
-                    и начни преподавать и путешествовать по всему миру! Или
-                    преподавай онлайн из любой точки планеты!
-                  </p>
                 </div>
                 <ul class="blog-list">
                   <li>
                     <a href="#">
-                      <i class="flaticon-user"></i>
-                      JOY
+                      <i class="flaticon-appointment"></i>
+                      {{.Created.Format "Mon Jan 2"}}
                     </a>
                   </li>
                   <li>
-                    <i class="flaticon-appointment"></i>
-                    03 January 2021
+                    <i class="flaticon-user"></i>
+                    Janathon Doe
                   </li>
                 </ul>
               </div>
             </div>
           </div>
-
-          <div class="col-lg-4 col-md-6 offset-md-3 offset-lg-0">
-            <div class="blog-item">
-              <div class="blog-image">
-                <a href="#">
-                  <img src="static/img/blog/3.jpg" alt="image" />
-                </a>
-              </div>
-              <div class="single-blog-item">
-                <div class="blog-content">
-                  <a href="#">
-                    <h3>У нас появился новый веб-сайт</h3>
-                  </a>
-                  <p>Школа иностранных языков JOY запускает новый веб-сайт</p>
-                </div>
-                <ul class="blog-list">
-                  <li>
-                    <a href="#">
-                      <i class="flaticon-user"></i>
-                      JOY
-                    </a>
-                  </li>
-                  <li>
-                    <i class="flaticon-appointment"></i>
-                    03 January 2021
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
+          {{end}}
+          
         </div>
       </div>
     </section>
