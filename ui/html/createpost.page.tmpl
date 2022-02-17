@@ -1,0 +1,61 @@
+  {{template "dashboardlayout" .}}
+
+  {{define "title"}}Add New Post{{end}}
+
+   {{define "dashboardbody"}}
+  
+ <main class="content">
+          <div class="container-fluid p-0">
+            <div class="mb-3">
+              <h1 class="h3 d-inline align-middle">Add New Post</h1>
+            </div>
+            <div class="row">
+              <div
+                class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
+              >
+                <div class="card flex-fill">
+                <form action="/admin/post/create" method="POST" enctype="multipart/form-data">
+                  <div class="card-body">
+                    <label for="title" class="form-label">Title</label>
+                    <input
+                      type="text"
+                      name="title"
+                      class="form-control"
+                      id="title"
+                      placeholder="Add title"
+                    />
+                  </div>
+                  <div class="card-body">
+                    <label for="content" class="form-label">Content</label>
+                    <textarea
+                      name="content"
+                      class="form-control"
+                      id="content"
+                      rows="15"
+                      placeholder="Start writing"
+                    ></textarea>
+                  </div>
+                  <div class="card-body">
+                    <label for="formFile" class="form-label"
+                      >Featured Image (1000px by 800px)</label
+                    >
+                    <input
+                      name="myFile"
+                      class="form-control"
+                      type="file"
+                      id="formFile"
+                    />
+                  </div>
+                  <div class="card-body">
+                    <button type="submit" class="btn btn-primary">
+                      Publish
+                    </button>
+                  </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {{end}}

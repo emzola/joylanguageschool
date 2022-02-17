@@ -600,7 +600,7 @@
           <h3>Новости Школы</h3>
 
           <div class="blog-btn">
-            <a href="/novosti" class="blog-btn-one">
+            <a href="/posts" class="blog-btn-one">
               Все Новости
               <i class="fa fa-arrow-right"></i>
             </a>
@@ -608,26 +608,25 @@
         </div>
 
         <div class="row">
+        {{if .Posts}}
         {{range .Posts}}
           <div class="col-lg-4 col-md-6">
             <div class="blog-item">
               <div class="blog-image">
-                <a href="single-blog.html">
-                  <img src="assets/img/blog/7.jpg" alt="image" />
+                <a href="/posts/{{.ID}}">
+                  <img src="{{.Image}}" alt="{{.Title}}" />
                 </a>
               </div>
               <div class="single-blog-item">
                 <div class="blog-content">
-                  <a href="/post/{{.ID}}">
+                  <a href="/posts/{{.ID}}">
                     <h3>{{.Title}}</h3>
                   </a>
                 </div>
                 <ul class="blog-list">
                   <li>
-                    <a href="#">
                       <i class="flaticon-appointment"></i>
-                      {{.Created.Format "Mon Jan 2"}}
-                    </a>
+                      {{humanDate .Created}}
                   </li>
                   <li>
                     <i class="flaticon-user"></i>
@@ -638,7 +637,9 @@
             </div>
           </div>
           {{end}}
-          
+          {{else}}
+            <p>Здесь не на что смотреть... пока!</p>
+          {{end}}
         </div>
       </div>
     </section>

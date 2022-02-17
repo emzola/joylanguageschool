@@ -1,0 +1,153 @@
+{{define "dashboardlayout"}}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link rel="shortcut icon" href="/static/admin/img/icons/icon-48x48.png" />
+
+    <title>{{template "title" .}} - Школа иностранных языков JOY</title>
+
+    <link href="/static/admin/css/app.css" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body>
+    <div class="wrapper">
+      <nav id="sidebar" class="sidebar js-sidebar">
+        <div class="sidebar-content js-simplebar">
+          <a class="sidebar-brand" href="/">
+            <span class="align-middle">Школа иностранных языков JOY</span>
+          </a>
+
+          <ul class="sidebar-nav">
+            <li class="sidebar-header">Pages</li>
+
+            <li class="sidebar-item active">
+              <a class="sidebar-link" href="/admin">
+                <i class="align-middle" data-feather="sliders"></i>
+                <span class="align-middle">Dashboard</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/post/create">
+                <i class="align-middle" data-feather="edit"></i>
+                <span class="align-middle">Add New Post</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/posts">
+                <i class="align-middle" data-feather="list"></i>
+                <span class="align-middle">All Posts</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/course/create">
+                <i class="align-middle" data-feather="edit"></i>
+                <span class="align-middle">Add New Course</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/admin/courses">
+                <i class="align-middle" data-feather="list"></i>
+                <span class="align-middle">All Courses</span>
+              </a>
+            </li>
+
+            <li class="sidebar-item">
+              <a class="sidebar-link" href="/">
+                <i class="align-middle" data-feather="log-out"></i>
+                <span class="align-middle">Logout</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      <div class="main">
+        <nav class="navbar navbar-expand navbar-light navbar-bg">
+          <a class="sidebar-toggle js-sidebar-toggle">
+            <i class="hamburger align-self-center"></i>
+          </a>
+
+          <div class="navbar-collapse collapse">
+            <ul class="navbar-nav navbar-align">
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-icon dropdown-toggle d-inline-block d-sm-none"
+                  href="#"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="align-middle" data-feather="settings"></i>
+                </a>
+
+                <a
+                  class="nav-link d-none d-sm-inline-block"
+                  href="#"
+                  data-bs-toggle="dropdown"
+                >
+                  <img
+                    src="/static/admin/img/avatars/avatar.jpg"
+                    class="avatar img-fluid rounded me-1"
+                    alt="Школа иностранных языков JOY"
+                  />
+                  <span class="text-dark">JOY</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </nav>
+
+        {{template "dashboardbody" .}}
+
+        <footer class="footer">
+          <div class="container-fluid">
+            <div class="row text-muted">
+              <div class="col-6 text-start">
+                <p class="mb-0">
+                  <a class="text-muted" href="/" target="_blank"
+                    ><strong>
+                      2022 Школа иностранных языков JOY. Все права
+                      защищены</strong
+                    ></a
+                  >
+                  &copy;
+                </p>
+              </div>
+              <div class="col-6 text-end">
+                <ul class="list-inline">
+                  <li class="list-inline-item">
+                    <a
+                      class="text-muted"
+                      href="https://github.com/emzola"
+                      target="_blank"
+                      >Разработка сайта</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script src="/static/admin/js/app.js"></script>
+  </body>
+</html>
+
+
+{{end}}

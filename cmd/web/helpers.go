@@ -3,9 +3,13 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"io"
 	"net/http"
+	"os"
 	"runtime/debug"
 	"time"
+
+	"github.com/lithammer/shortuuid/v4"
 )
 
 func(app *application) serverError(w http.ResponseWriter, err error) {
@@ -16,6 +20,10 @@ func(app *application) serverError(w http.ResponseWriter, err error) {
 
 func (app *application) clientError(w http.ResponseWriter, status int) {
 	http.Error(w, http.StatusText(status), status)
+}
+
+func (app *application) badRequest(w http.ResponseWriter, err error) {
+	http.Error(w, "Error retrieving image", http.StatusBadRequest)
 }
 
 func (app *application) notFound(w http.ResponseWriter) {
@@ -47,4 +55,27 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, name stri
 
 	buf.WriteTo(w)
 }
+
+// Get image from form and save to uploads directory
+func (app *application) FileUpload(r *http.Request) (string, error) {
+	r.ParseMultipartForm(32 << 20)
+
+	file, handler, err := r.FormFile("myFile")
+		if err != nil {
+			return "", err
+		}
+
+	defer file.Close() 
+
+	f, err := os.OpenFile("uploads/" + handler.Filename + shortuuid.New() + ".jpg", os.O_WRONLY|os.O_CREATE, 0666)
+		if err != nil {
+			return "", err
+		}
+
+	defer f.Close()
+
+	io.Copy(f, file)
+
+	return f.Name(), nil
+	}
 

@@ -1,0 +1,78 @@
+  {{template "dashboardlayout" .}}
+
+  {{define "title"}}Dashboard{{end}}
+
+   {{define "dashboardbody"}}
+  
+  <main class="content">
+          <div class="container-fluid p-0">
+            <div class="mb-3">
+              <h1 class="h3 d-inline align-middle">Admin Dashboard</h1>
+            </div>
+            <div class="row">
+              <div
+                class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
+              >
+                <div class="card flex-fill">
+                  <div class="card-body">
+                    <p class="card-text">
+                      Welcome to Joy Language School Admin Dashboard. We’ve
+                      assembled some options to get you started. Create a new
+                      post:
+                    </p>
+                    <a href="/admin/post/create" class="btn btn-primary">Add New Post</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div
+                class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
+              >
+              <div class="card flex-fill">
+                  {{if .Posts}}
+                  <table class="table table-hover my-0">
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th class="d-none d-xl-table-cell">Created</th>
+                        <th>Edit</th>
+                        <th class="d-none d-md-table-cell">Delete</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{range .Posts}}
+                      <tr>
+                        <td>
+                          <a href="/posts/{{.ID}}"
+                            >{{.Title}}</a
+                          >
+                        </td>
+                        <td class="d-none d-xl-table-cell">{{humanDate .Created}}</td>
+                        <td>
+                          <a href="#"
+                            ><span class="badge bg-success">Edit</span></a
+                          >
+                        </td>
+                        <td class="d-none d-md-table-cell">
+                          <a href="#"
+                            ><span class="badge bg-danger">Delete</span></a
+                          >
+                        </td>
+                      </tr>
+                    {{end}}
+                    </tbody>
+                  </table>
+                  {{else}}
+                  <div class="card-body">
+                  <p>There's nothing to see here... yet!</p>
+                  </div>
+                  {{end}}
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {{end}}

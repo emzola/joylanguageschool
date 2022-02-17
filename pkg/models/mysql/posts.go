@@ -11,33 +11,28 @@ type PostModel struct {
 }
 
 // Insert post to database
-func (m *PostModel) Insert(title, content string) (int, error) {
-	query := `INSERT INTO posts (title, content, created)
-						VALUES(?, ?, UTC_TIMESTAMP())`
+func (m *PostModel) Insert(title, content, image string) error {
+	query := `INSERT INTO posts (title, content, image, created)
+						VALUES(?, ?, ?, UTC_TIMESTAMP())`
 
-	result, err := m.DB.Exec(query, title, content)
+	_, err := m.DB.Exec(query, title, content, image)
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	id, err := result.LastInsertId()
-	if err != nil {
-		return 0, err
-	}
-
-	return int(id), nil
+	return nil
 }
 
 // Gets a specific post from database
 func (m *PostModel) Get(id int) (*models.Post, error) {
-	query := `SELECT id, title, content, created FROM posts
+	query := `SELECT id, title, content, image, created FROM posts
 						WHERE id = ?`
 
 row := m.DB.QueryRow(query, id)
 
 p := &models.Post{}
 
-err := row.Scan(&p.ID, &p.Title, &p.Content, &p.Created)
+err := row.Scan(&p.ID, &p.Title, &p.Content, &p.Image, &p.Created)
 if err == sql.ErrNoRows {
 	return nil, models.ErrNoRecord
 } else if err != nil {
@@ -48,8 +43,8 @@ return p, nil
 }
 
 // Get all posts from database
-func (m *PostModel) GetAll() ([]*models.Post, error) {
-	query := `SELECT id, title, content, created FROM posts
+func (m *PostModel) GetAllPosts() ([]*models.Post, error) {
+	query := `SELECT id, title, content, image, created FROM posts
 	ORDER BY created DESC`
 
 	rows, err := m.DB.Query(query)
@@ -64,7 +59,7 @@ func (m *PostModel) GetAll() ([]*models.Post, error) {
 	for rows.Next() {
 		p := &models.Post{}
 
-		err := rows.Scan(&p.ID, &p.Title, &p.Content, &p.Created)
+		err := rows.Scan(&p.ID, &p.Title, &p.Content, &p.Image, &p.Created)
 		if err != nil {
 			return nil, err
 		}
@@ -79,9 +74,41 @@ func (m *PostModel) GetAll() ([]*models.Post, error) {
 	return posts, nil
 }
 
-// Get latest posts from database
-func (m *PostModel) Latest() ([]*models.Post, error) {
-	query := `SELECT id, title, content, created FROM posts
+// Get latest 10 posts from database
+func (m *PostModel) GetLastTenPosts() ([]*models.Post, error) {
+	query := `SELECT id, title, content, image, created FROM posts
+	ORDER BY created DESC LIMIT 10`
+
+	rows, err := m.DB.Query(query)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	posts := []*models.Post{}
+
+	for rows.Next() {
+		p := &models.Post{}
+
+		err := rows.Scan(&p.ID, &p.Title, &p.Content, &p.Image, &p.Created)
+		if err != nil {
+			return nil, err
+		}
+
+		posts = append(posts, p)
+	}
+
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return posts, nil
+}
+
+// Get latest 3 posts from database
+func (m *PostModel) GetLastThreePosts() ([]*models.Post, error) {
+	query := `SELECT id, title, content, image, created FROM posts
 	ORDER BY created DESC LIMIT 3`
 
 	rows, err := m.DB.Query(query)
@@ -96,7 +123,7 @@ func (m *PostModel) Latest() ([]*models.Post, error) {
 	for rows.Next() {
 		p := &models.Post{}
 
-		err := rows.Scan(&p.ID, &p.Title, &p.Content, &p.Created)
+		err := rows.Scan(&p.ID, &p.Title, &p.Content, &p.Image, &p.Created)
 		if err != nil {
 			return nil, err
 		}
@@ -110,4 +137,3 @@ func (m *PostModel) Latest() ([]*models.Post, error) {
 
 	return posts, nil
 }
-

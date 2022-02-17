@@ -1,17 +1,28 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
 
-func (app *application) routes() *http.ServeMux{
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", app.home)
-	mux.HandleFunc("/prepodavateli", app.showTeachers)
-	mux.HandleFunc("/novosti", app.showPosts)
-	mux.HandleFunc("/post", app.showPost)
-	mux.HandleFunc("/post/create", app.createPost)
+	"github.com/julienschmidt/httprouter"
+)
 
-	fileServer := http.FileServer(http.Dir("./ui/static"))
-	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+func (app *application) routes() http.Handler {
+	router := httprouter.New()
+	router.HandlerFunc(http.MethodGet, "/", app.home)
+	router.HandlerFunc(http.MethodGet, "/teachers", app.showTeachers)
+	router.HandlerFunc(http.MethodGet, "/posts/:id", app.showPost)
+	router.HandlerFunc(http.MethodGet, "/posts", app.showPosts)
+	router.HandlerFunc(http.MethodGet, "/admin", app.showDashboard)
+	router.HandlerFunc(http.MethodGet, "/admin/post/create", app.createPostForm)
+	router.HandlerFunc(http.MethodPost, "/admin/post/create", app.createPost)
+	router.HandlerFunc(http.MethodGet, "/admin/posts", app.showAllDashboardPosts)
+
+	// fileServer := http.FileServer(http.Dir("./ui/static"))
+	// mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+
+	router.ServeFiles("/static/*filepath", http.Dir("./ui/static"))
+	router.ServeFiles("/uploads/*filepath", http.Dir("./uploads"))
 	
-	return mux
+	return app.recoverPanic(app.logRequest(secureHeaders(router)))
 }
+
