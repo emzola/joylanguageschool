@@ -12,7 +12,7 @@ import (
 	"github.com/lithammer/shortuuid/v4"
 )
 
-func(app *application) serverError(w http.ResponseWriter, err error) {
+func (app *application) serverError(w http.ResponseWriter, err error) {
 	trace := fmt.Sprintf("%s\n%s", err.Error(), debug.Stack())
 	app.logger.Output(2, trace)
 	http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -20,10 +20,6 @@ func(app *application) serverError(w http.ResponseWriter, err error) {
 
 func (app *application) clientError(w http.ResponseWriter, status int) {
 	http.Error(w, http.StatusText(status), status)
-}
-
-func (app *application) badRequest(w http.ResponseWriter, err error) {
-	http.Error(w, "Error retrieving image", http.StatusBadRequest)
 }
 
 func (app *application) notFound(w http.ResponseWriter) {
@@ -34,7 +30,12 @@ func (app *application) addDefaultData(td *templateData, r *http.Request) *templ
 	if td == nil {
 		td = &templateData{}
 	}
+
 	td.CurrentYear = time.Now().Year()
+
+	// Add flash message to template data is one exists
+	td.Flash = app.session.PopString(r, "flash")
+
 	return td
 }
 
@@ -61,21 +62,22 @@ func (app *application) FileUpload(r *http.Request) (string, error) {
 	r.ParseMultipartForm(32 << 20)
 
 	file, handler, err := r.FormFile("myFile")
-		if err != nil {
-			return "", err
-		}
+	if err != nil {
+		return "", err
+	}
 
-	defer file.Close() 
+	defer file.Close()
 
-	f, err := os.OpenFile("uploads/" + handler.Filename + shortuuid.New() + ".jpg", os.O_WRONLY|os.O_CREATE, 0666)
-		if err != nil {
-			return "", err
-		}
+	name := handler.Filename + shortuuid.New() + ".jpg"
+
+	f, err := os.OpenFile("uploads/"+name, os.O_WRONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return "", err
+	}
 
 	defer f.Close()
 
 	io.Copy(f, file)
 
-	return f.Name(), nil
-	}
-
+	return name, nil
+}

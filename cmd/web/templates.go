@@ -2,6 +2,7 @@ package main
 
 import (
 	"html/template"
+	"net/url"
 	"path/filepath"
 	"time"
 
@@ -10,10 +11,14 @@ import (
 
 type templateData struct {
 	CurrentYear int
-	Post *models.Post
-	Posts []*models.Post
+	Flash       string
+	FormData    url.Values
+	FormErrors  map[string]string
+	Post        *models.Post
+	Posts       []*models.Post
 }
 
+// Display a readable human date
 func humanDate(t time.Time) string {
 	return t.Format("Jan 2, 2006")
 }
@@ -54,4 +59,3 @@ func newTemplateCache(dir string) (map[string]*template.Template, error) {
 
 	return cache, nil
 }
-

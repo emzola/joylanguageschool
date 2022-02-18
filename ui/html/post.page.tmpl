@@ -24,18 +24,18 @@
                     <div class="col-lg-8 col-md-12">
                         <div class="blog-details-desc">
                             <div class="article-image">
-                                <img src="static/img/blog-details/1.jpg" alt="image">
+                                <img src="/uploads/{{.Post.Image}}" alt="{{.Post.Title}}">
                             </div>
                             <div class="article-content">
                                 <div class="entry-meta">
                                     <ul>
                                         <li>
-                                            <span>Posted On:</span> 
-                                            <time>{{humanDate .Post.Created}}</time>
+                                            <span>Posted on:</span> 
+                                          <a href="{{.Post.ID}}">{{humanDate .Post.Created}}</a>
                                         </li>
                                         <li>
-                                            <span>Posted By:</span> 
-                                            <a href="#">John Anderson</a>
+                                            <span>By:</span> 
+                                            <a href="{{.Post.ID}}">JOY</a>
                                         </li>
                                     </ul>
                                 </div>
