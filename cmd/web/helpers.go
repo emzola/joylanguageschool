@@ -81,3 +81,7 @@ func (app *application) FileUpload(r *http.Request) (string, error) {
 
 	return name, nil
 }
+
+func (app *application) authenticatedUser(r *http.Request) int {
+	return app.session.GetInt(r, "userID")
+}

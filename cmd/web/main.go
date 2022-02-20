@@ -34,6 +34,7 @@ type application struct {
 	session       *sessions.Session
 	posts         *mysql.PostModel
 	templateCache map[string]*template.Template
+	users         *mysql.UserModel
 }
 
 func main() {
@@ -45,7 +46,7 @@ func main() {
 	var secret = "secret"
 	flag.StringVar(&secret, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
 
-	flag.StringVar(&cfg.db.dsn, "db-dsn", "joylanguageschool:EMZOLA1989@/joylanguageschool?parseTime=true", "MYSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "MYSQL DSN")
 
 	flag.IntVar(&cfg.db.SetMaxOpenConns, "db-max-open-conns", 25, "MYSQL max open connections")
 	flag.IntVar(&cfg.db.SetMaxIdleConns, "db-max-idle-conns", 25, "MYSQL max idle connections")
@@ -80,6 +81,7 @@ func main() {
 		session:       session,
 		posts:         &mysql.PostModel{DB: db},
 		templateCache: templateCache,
+		users:         &mysql.UserModel{DB: db},
 	}
 
 	srv := &http.Server{

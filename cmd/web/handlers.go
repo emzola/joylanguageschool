@@ -1,14 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
-	"unicode/utf8"
 
-	"github.com/gorilla/mux"
+	"github.com/julienschmidt/httprouter"
 	"joylanguageschool.ru/pkg/models"
+	"joylanguageschool.ru/pkg/validator"
 )
 
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -27,8 +25,8 @@ func (app *application) showTeachers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	params := httprouter.ParamsFromContext(r.Context())
+	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil || id < 1 {
 		app.notFound(w)
 		return
@@ -81,21 +79,8 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
 	title := r.PostForm.Get("title")
 	content := r.PostForm.Get("content")
 
-	errors := make(map[string]string)
-
-	if strings.TrimSpace(title) == "" {
-		errors["title"] = "This field cannot be blank"
-	} else if utf8.RuneCountInString(title) > 100 {
-		errors["title"] = "This field is too long (maximum is 100 characters)"
-	}
-
-	if strings.TrimSpace(content) == "" {
-		errors["content"] = "This field cannot be blank"
-	}
-
-	if strings.TrimSpace(image) == "" {
-		errors["image"] = "This field cannot be blank"
-	}
+	// Validate form fields
+	errors := validator.CreatePost(title, content, image)
 
 	// If there are errors, re-populate the post form and display it again
 	if len(errors) > 0 {
@@ -109,11 +94,11 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
 	err = app.posts.Insert(title, content, image)
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
 
 	app.session.Put(r, "flash", "Post successfully created")
 	http.Redirect(w, r, "/admin/posts", http.StatusSeeOther)
-
 }
 
 func (app *application) showPosts(w http.ResponseWriter, r *http.Request) {
@@ -127,21 +112,85 @@ func (app *application) showPosts(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display the user signup form...")
+	app.render(w, r, "signup.page.tmpl", nil)
 }
 
 func (app *application) signupUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Create a new user...")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	name := r.PostForm.Get("name")
+	email := r.PostForm.Get("email")
+	password := r.PostForm.Get("password")
+
+	// Validate form fields
+	errors := validator.Signup(name, email, password)
+
+	// If there are errors, re-populate the registration form and display it again
+	if len(errors) > 0 {
+		app.render(w, r, "signup.page.tmpl", &templateData{
+			FormErrors: errors,
+			FormData:   r.PostForm,
+		})
+		return
+	}
+
+	err = app.users.Insert(name, email, password)
+
+	if err == models.ErrDuplicateEmail {
+		errors["email"] = "Email address is already in use"
+		app.render(w, r, "signup.page.tmpl", &templateData{
+			FormErrors: errors,
+			FormData:   r.PostForm,
+		})
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(r, "flash", "Your signup successful. Please log in.")
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 func (app *application) loginUserForm(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Display the user login form...")
+	app.render(w, r, "login.page.tmpl", nil)
 }
 
 func (app *application) loginUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Authenticate and login the user...")
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	email := r.PostForm.Get("email")
+	password := r.PostForm.Get("password")
+
+	id, err := app.users.Authenticate(email, password)
+	if err == models.ErrInvalidCredentials {
+		errors := validator.Login() 
+		errors["generic"] = "Email or password is incorrect"
+		app.render(w, r, "login.page.tmpl", &templateData{
+			FormErrors: errors,
+			FormData:   r.PostForm,
+		})
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(r, "userID", id)
+
+	http.Redirect(w, r, "/admin", http.StatusSeeOther)
 }
 
 func (app *application) logoutUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Logout the user...")
+	app.session.Remove(r, "userID")
+	app.session.Put(r, "flash", "You've been logged out successfully!")
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
