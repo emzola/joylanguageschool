@@ -7,7 +7,12 @@ import (
 	"net/http"
 	"os"
 	"runtime/debug"
+	"strconv"
 	"time"
+
+	"github.com/julienschmidt/httprouter"
+	"github.com/justinas/nosurf"
+	"joylanguageschool.ru/pkg/models"
 
 	"github.com/lithammer/shortuuid/v4"
 )
@@ -26,11 +31,16 @@ func (app *application) notFound(w http.ResponseWriter) {
 	app.clientError(w, http.StatusNotFound)
 }
 
+// Add sitewide template data to template files
 func (app *application) addDefaultData(td *templateData, r *http.Request) *templateData {
 	if td == nil {
 		td = &templateData{}
 	}
 
+	// Add CSRF token
+	td.CSRFToken = nosurf.Token(r)
+	
+	td.AuthenticatedUser = app.authenticatedUser(r)
 	td.CurrentYear = time.Now().Year()
 
 	// Add flash message to template data is one exists
@@ -82,6 +92,20 @@ func (app *application) FileUpload(r *http.Request) (string, error) {
 	return name, nil
 }
 
-func (app *application) authenticatedUser(r *http.Request) int {
-	return app.session.GetInt(r, "userID")
+func (app *application) authenticatedUser(r *http.Request) *models.User {
+	user, ok := r.Context().Value(contextKeyUser).(*models.User)
+	if !ok {
+		return nil
+	}
+	return user
+}
+
+// Read id parameter from url
+func (app *application) readIDParam(w http.ResponseWriter, r *http.Request) (int, error) {
+	params := httprouter.ParamsFromContext(r.Context())
+	id, err := strconv.Atoi(params.ByName("id"))
+	if err != nil || id < 1 {
+		return 0, err
+	}
+	return id, err
 }

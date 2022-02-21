@@ -10,6 +10,8 @@ import (
 )
 
 type templateData struct {
+	CSRFToken   string
+	AuthenticatedUser *models.User
 	CurrentYear int
 	Flash       string
 	FormData    url.Values

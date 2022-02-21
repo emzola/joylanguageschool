@@ -10,18 +10,27 @@ import (
 func (app *application) routes() http.Handler {
 
 	standardMiddleware := alice.New(app.session.Enable, app.recoverPanic, app.logRequest, secureHeaders)
-	dynamicMiddleware := alice.New(app.session.Enable)
+	dynamicMiddleware := alice.New(app.session.Enable, noSurf, app.authenticate)
 
 	router := httprouter.New()
-	// Routes
+
+	// Frontend Routes
 	router.Handler(http.MethodGet, "/", dynamicMiddleware.ThenFunc(app.home))
 	router.Handler(http.MethodGet, "/teachers", dynamicMiddleware.ThenFunc(app.showTeachers))
 	router.Handler(http.MethodGet, "/posts", dynamicMiddleware.ThenFunc(app.showPosts))
 	router.Handler(http.MethodGet, "/posts/:id", dynamicMiddleware.ThenFunc(app.showPost))
+	router.Handler(http.MethodPost, "/mail", dynamicMiddleware.ThenFunc(app.sendMail))
+
+	// Admin dashboard routes
 	router.Handler(http.MethodGet, "/admin", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.showDashboard))
+	router.Handler(http.MethodGet, "/admin/posts", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.showAllDashboardPosts))
 	router.Handler(http.MethodGet, "/admin/post/create", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.createPostForm))
 	router.Handler(http.MethodPost, "/admin/post/create", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.createPost))
-	router.Handler(http.MethodGet, "/admin/posts", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.showAllDashboardPosts))
+	router.Handler(http.MethodGet, "/admin/post/edit/:id", dynamicMiddleware.Append(app.requireAuthenticatedUser).ThenFunc(app.editPostForm))
+	router.Handler(http.MethodPost, "/admin/post/edit/:id", dynamicMiddleware.Append(app.requireAuthenticatedUser, app.method).ThenFunc(app.editPost))
+	router.Handler(http.MethodPost, "/admin/posts/:id", dynamicMiddleware.Append(app.requireAuthenticatedUser, app.method).ThenFunc(app.deletePost))
+	
+	// Login and logout routes
 	router.Handler(http.MethodGet, "/signup", dynamicMiddleware.ThenFunc(app.signupUserForm))
 	router.Handler(http.MethodPost, "/signup", dynamicMiddleware.ThenFunc(app.signupUser))
 	router.Handler(http.MethodGet, "/login", dynamicMiddleware.ThenFunc(app.loginUserForm))

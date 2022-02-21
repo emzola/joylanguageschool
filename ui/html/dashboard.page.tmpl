@@ -26,11 +26,15 @@
               </div>
             </div>
 
+            <div class="mb-3">
+              <h1 class="h4 d-inline align-middle">Recent Posts</h>
+            </div>
+
             <div class="row">
               <div
                 class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
               >
-              <div class="card flex-fill">
+                <div class="card flex-fill">
                   {{if .Posts}}
                   <table class="table table-hover my-0">
                     <thead>
@@ -51,14 +55,14 @@
                         </td>
                         <td class="d-none d-xl-table-cell">{{humanDate .Created}}</td>
                         <td>
-                          <a href="#"
-                            ><span class="badge bg-success">Edit</span></a
-                          >
+                          <a href="/admin/post/edit/{{.ID}}"><button type="submit" class="btn btn-success">Edit</button></a>
                         </td>
                         <td class="d-none d-md-table-cell">
-                          <a href="#"
-                            ><span class="badge bg-danger">Delete</span></a
-                          >
+                          <form action="/admin/posts/{{.ID}}" method="POST">
+                          <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                          <input type="hidden" name="_method" value="delete">
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
                         </td>
                       </tr>
                     {{end}}
@@ -72,6 +76,11 @@
                 </div>
               </div>
             </div>
+
+            <div class="mb-3">
+              <h1 class="h4 d-inline align-middle">Recent Programmes</h>
+            </div>
+
           </div>
         </main>
 

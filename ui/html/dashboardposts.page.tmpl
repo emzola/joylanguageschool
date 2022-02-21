@@ -39,14 +39,14 @@
                         </td>
                         <td class="d-none d-xl-table-cell">{{humanDate .Created}}</td>
                         <td>
-                          <a href="#"
-                            ><span class="badge bg-success">Edit</span></a
-                          >
+                          <a href="/admin/post/edit/{{.ID}}"><button type="submit" class="btn btn-success">Edit</button></a>
                         </td>
                         <td class="d-none d-md-table-cell">
-                          <a href="#"
-                            ><span class="badge bg-danger">Delete</span></a
-                          >
+                          <form action="/admin/posts/{{.ID}}" method="POST">
+                          <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                          <input type="hidden" name="_method" value="delete">
+                          <button type="submit" class="btn btn-danger">Delete</button>
+                          </form>
                         </td>
                       </tr>
                     {{end}}

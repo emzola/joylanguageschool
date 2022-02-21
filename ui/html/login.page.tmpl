@@ -48,6 +48,7 @@
                       />
                     </div>
                     <form action="/login" method="POST" novalidate>
+                    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                      <div class="mb-3">
                     {{with .FormErrors.generic}}
                       <label class="text-danger">{{.}}</label>

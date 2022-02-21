@@ -37,6 +37,7 @@
 							<div class="card-body">
 								<div class="m-sm-4">
 									<form action="/signup" method="POST" novalidate>
+									<input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 										<div class="mb-3">
 											<label class="form-label">Name</label>
 											{{with .FormErrors.name}}

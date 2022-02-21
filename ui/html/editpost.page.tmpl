@@ -1,24 +1,25 @@
   {{template "dashboardlayout" .}}
 
-  {{define "title"}}Add New Post{{end}}
+  {{define "title"}}Edit Post{{end}}
 
    {{define "dashboardbody"}}
   
  <main class="content">
           <div class="container-fluid p-0">
             <div class="mb-3">
-              <h1 class="h3 d-inline align-middle">Add New Post</h1>
+              <h1 class="h3 d-inline align-middle">Edit Post</h1>
             </div>
             <div class="row">
               <div
                 class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
               >
                 <div class="card flex-fill">
-                <form action="/admin/post/create" method="POST" enctype="multipart/form-data">
+                <form action="/admin/post/edit/{{.Post.ID}}" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_method" value="patch">
                 <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
                   <div class="card-body">
                     <label for="title" class="form-label">Title</label>
-                    {{with .FormErrors.title}}
+                     {{with .FormErrors.title}}
                       <label class="text-danger">{{.}}</label>
                     {{end}}
                     <input
@@ -27,7 +28,7 @@
                       class="form-control"
                       id="title"
                       placeholder="Add title"
-                      value="{{.FormData.Get "title"}}"
+                      value='{{.Post.Title}}'
                     />
                   </div>
                   <div class="card-body">
@@ -41,13 +42,13 @@
                       id="content"
                       rows="25"
                       placeholder="Start writing"
-                    >{{.FormData.Get "content"}}</textarea>
+                    >{{.Post.Content}}</textarea>
                   </div>
                   <div class="card-body">
                     <label for="formFile" class="form-label"
                       >Featured Image (1000px by 800px)</label
                     >
-                     {{with .FormErrors.image}}
+                    {{with .FormErrors.image}}
                       <label class="text-danger">{{.}}</label>
                     {{end}}
                     <input
@@ -60,7 +61,7 @@
                   </div>
                   <div class="card-body">
                     <button type="submit" class="btn btn-primary">
-                      Publish
+                      Update Post
                     </button>
                   </div>
                   </form>

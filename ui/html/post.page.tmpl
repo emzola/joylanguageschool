@@ -48,18 +48,17 @@
                     <div class="col-lg-4 col-md-12">
                         <aside class="widget-area" id="secondary">
                             <section class="widget widget_zash_posts_thumb">
-                                <h3 class="widget-title">Popular Posts</h3>
+                                <h3 class="widget-title">Последние новости</h3>
+                                {{range .Posts}}
                                 <article class="item">
-                                    <a href="#" class="thumb">
-                                        <span class="fullimage cover bg1" role="img"></span>
-                                    </a>
                                     <div class="info">
-                                        <time class="2021-06-30">June 10, 2021</time>
+                                        <time class="2021-06-30">{{humanDate .Created}}</time>
                                         <h4 class="title usmall">
-                                            <a href="#">Making Peace With The Feast Or Famine Of Freelancing</a>
+                                            <a href="/posts/{{.ID}}">{{.Title}}</a>
                                         </h4>
                                     </div>
                                 </article>
+                                {{end}}
                             </section>
                         </aside>
                     </div>

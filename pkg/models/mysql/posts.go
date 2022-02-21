@@ -74,8 +74,8 @@ func (m *PostModel) GetAllPosts() ([]*models.Post, error) {
 	return posts, nil
 }
 
-// Get latest 10 posts from database
-func (m *PostModel) GetLastTenPosts() ([]*models.Post, error) {
+// Get latest 5 posts from database
+func (m *PostModel) GetLastFivePosts() ([]*models.Post, error) {
 	query := `SELECT id, title, content, image, created FROM posts
 	ORDER BY created DESC LIMIT 10`
 
@@ -137,3 +137,43 @@ func (m *PostModel) GetLastThreePosts() ([]*models.Post, error) {
 
 	return posts, nil
 }
+
+func (m *PostModel) Update(id int, title, content, image string) error {
+	if id < 1 {
+		return models.ErrNoRecord
+	}
+
+	query := `UPDATE posts SET title=?, content=?, image=? WHERE id=?`
+
+	_, err := m.DB.Exec(query, title, content, image, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostModel) Delete (id int) error {
+	if id < 1 {
+		return models.ErrNoRecord
+	}
+
+	query := `DELETE FROM posts WHERE id=?`
+
+	result, err := m.DB.Exec(query, id)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return models.ErrNoRecord
+	}
+
+	return nil
+}
+
