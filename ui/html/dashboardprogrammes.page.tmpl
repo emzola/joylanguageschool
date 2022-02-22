@@ -1,41 +1,25 @@
   {{template "dashboardlayout" .}}
 
-  {{define "title"}}Dashboard{{end}}
+  {{define "title"}}All Programmes{{end}}
 
    {{define "dashboardbody"}}
   
   <main class="content">
           <div class="container-fluid p-0">
+          {{with .Flash}}
+            <div class="row">
+            <div class="p-3 mb-2 bg-primary text-white">{{.}}</div>
+            </div>
+           {{end}}
             <div class="mb-3">
-              <h1 class="h3 d-inline align-middle">Admin Dashboard</h1>
+              <h1 class="h3 d-inline align-middle">All Programmes</h1>
             </div>
             <div class="row">
               <div
                 class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
               >
                 <div class="card flex-fill">
-                  <div class="card-body">
-                    <p class="card-text">
-                      Welcome to Joy Language School Admin Dashboard. We’ve
-                      assembled some options to get you started. Create a new
-                      post:
-                    </p>
-                    <a href="/admin/post/create" class="btn btn-primary">Add New Post</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <h1 class="h4 d-inline align-middle">Recent Posts</h>
-            </div>
-
-            <div class="row">
-              <div
-                class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
-              >
-                <div class="card flex-fill">
-                  {{if .Posts}}
+                  {{if .Programmes}}
                   <table class="table table-hover my-0">
                     <thead>
                       <tr>
@@ -46,19 +30,19 @@
                       </tr>
                     </thead>
                     <tbody>
-                      {{range .Posts}}
+                      {{range .Programmes}}
                       <tr>
                         <td>
-                          <a href="/posts/{{.ID}}" target="_blank"
+                          <a href="/programmes/{{.ID}}" target="_blank"
                             >{{.Title}}</a
                           >
                         </td>
                         <td class="d-none d-xl-table-cell">{{humanDate .Created}}</td>
                         <td>
-                          <a href="/admin/post/edit/{{.ID}}"><button type="submit" class="btn btn-success">Edit</button></a>
+                          <a href="/admin/programme/edit/{{.ID}}"><button type="submit" class="btn btn-success">Edit</button></a>
                         </td>
                         <td class="d-none d-md-table-cell">
-                          <form action="/admin/posts/{{.ID}}" method="POST">
+                          <form action="/admin/programmes/{{.ID}}" method="POST">
                           <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
                           <input type="hidden" name="_method" value="delete">
                           <button type="submit" class="btn btn-danger">Delete</button>

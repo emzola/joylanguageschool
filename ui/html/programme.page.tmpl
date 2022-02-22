@@ -1,0 +1,129 @@
+{{template "pagelayout" .}}
+
+{{define "title"}}{{.Programme.Title}}{{end}}
+
+{{define "pageheadertitle"}}
+<h2>Программы и курсы</h2>
+{{end}}
+
+{{define "breadcrumbs"}}
+<ul>
+<li>
+    <a href="/">Главная</a>
+</li>
+<li>Программы и курсы</li>
+</ul>
+{{end}}
+
+{{define "pagebody"}}
+
+ <!-- Start About Section -->
+    <section class="about-section ptb-100">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-lg-6 col-md-12">
+            <div class="about-content-area">
+              <h3>{{.Programme.Title}}</h3>
+              {{safeHTML .Programme.Content}}
+              <div class="about-btn">
+                <a href="#контакты" class="about-btn-one">Связаться</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-12">
+            <div class="circulate-image">
+              <img src="/uploads/{{.Programme.Image}}" alt="{{.Programme.Title}}" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End About Section -->
+
+    <!-- Start Productive Section -->
+    <section class="productive-section productive-bg">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 col-md-6">
+            <div class="increase-item">
+              <div class="increase-area-content">
+                <img src="/static/img/icon/1.png" alt="image" />
+                <h3>Индивидуальный подход к каждому</h3>
+                <p>
+                  Мы заботимся о потребностях студентов, разрабатывая
+                  эффективные уроки, которые помогут им добиться успеха.
+                </p>
+              </div>
+              <div class="increase-shape">
+                <img src="/static/img/icon/shape.png" alt="image" />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <div class="increase-item">
+              <div class="increase-area-content">
+                <img src="/static/img/icon/2.png" alt="image" />
+                <h3>Высококвалифицированные преподаватели</h3>
+                <p>
+                  Наши преподаватели - дружелюбные профессионалы своего дела.
+                </p>
+              </div>
+              <div class="increase-shape">
+                <img src="/static/img/icon/shape.png" alt="image" />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <div class="increase-item">
+              <div class="increase-area-content">
+                <img src="/static/img/icon/3.png" alt="image" />
+                <h3>Полное погружение в языковую среду</h3>
+                <p>
+                  Наши курсы предназначены для того, чтобы вы могли учиться и
+                  совершенствоваться, используя только тот язык, который вы
+                  изучаете.
+                </p>
+              </div>
+              <div class="increase-shape">
+                <img src="/static/img/icon/shape.png" alt="image" />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <div class="increase-item">
+              <div class="increase-area-content">
+                <img src="/static/img/icon/4.png" alt="image" />
+                <h3>Активная внеклассная деятельность</h3>
+                <p>
+                  Мы не просто преподаем языки. Мы организуем разговорный клуб,
+                  летние лагеря, загородные языковые лагеря и экскурсии.
+                </p>
+              </div>
+              <div class="increase-shape">
+                <img src="/static/img/icon/shape.png" alt="image" />
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6 col-md-6">
+            <div class="increase-item">
+              <div class="increase-area-content">
+                <img src="/static/img/icon/5.png" alt="image" />
+                <h3>Низкие цены, семейные скидки</h3>
+                <p>
+                  Нашим клиентам доступны скидки на курсы и бесплатные занятия!
+                  Позвоните и узнайте о наших скидках или закажите бесплатное
+                  пробное занятие/собеседование уже сегодня!
+                </p>
+              </div>
+              <div class="increase-shape">
+                <img src="/static/img/icon/shape.png" alt="image" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- End Productive Section -->
+
+{{template "contact" .}}
+{{end}}

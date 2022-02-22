@@ -37,6 +37,7 @@ type application struct {
 	logger        *log.Logger
 	session       *sessions.Session
 	posts         *mysql.PostModel
+	programmes    *mysql.ProgrammeModel
 	templateCache map[string]*template.Template
 	users         *mysql.UserModel
 }
@@ -48,7 +49,7 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 
 	var secret = "secret"
-	flag.StringVar(&secret, "secret", os.Getenv("secret"), "Secret Key")
+	flag.StringVar(&secret, "secret", os.Getenv("SECRET"), "Secret Key")
 
 	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "MYSQL DSN")
 
@@ -84,6 +85,7 @@ func main() {
 		logger:        logger,
 		session:       session,
 		posts:         &mysql.PostModel{DB: db},
+		programmes:    &mysql.ProgrammeModel{DB: db},
 		templateCache: templateCache,
 		users:         &mysql.UserModel{DB: db},
 	}

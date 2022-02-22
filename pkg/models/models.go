@@ -19,6 +19,14 @@ type Post struct {
 	Created time.Time
 }
 
+type Programme struct {
+	ID int
+	Title string
+	Content string
+	Image string
+	Created time.Time
+}
+
 type User struct {
 	ID int
 	Name string

@@ -1,0 +1,73 @@
+  {{template "dashboardlayout" .}}
+
+  {{define "title"}}Add New Programme{{end}}
+
+   {{define "dashboardbody"}}
+  
+ <main class="content">
+          <div class="container-fluid p-0">
+            <div class="mb-3">
+              <h1 class="h3 d-inline align-middle">Add New Programme</h1>
+            </div>
+            <div class="row">
+              <div
+                class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2"
+              >
+                <div class="card flex-fill">
+                <form action="/admin/programme/create" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+                  <div class="card-body">
+                    <label for="title" class="form-label">Title</label>
+                    {{with .FormErrors.title}}
+                      <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input
+                      type="text"
+                      name="title"
+                      class="form-control"
+                      id="title"
+                      placeholder="Add title"
+                      value="{{.FormData.Get "title"}}"
+                    />
+                  </div>
+                  <div class="card-body">
+                    <label for="content" class="form-label">Content</label>
+                    {{with .FormErrors.content}}
+                      <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <textarea
+                      name="content"
+                      class="form-control"
+                      id="content"
+                      rows="25"
+                      placeholder="Start writing"
+                    >{{.FormData.Get "content"}}</textarea>
+                  </div>
+                  <div class="card-body">
+                    <label for="formFile" class="form-label"
+                      >Featured Image (925px by 590px)</label
+                    >
+                     {{with .FormErrors.image}}
+                      <label class="text-danger">{{.}}</label>
+                    {{end}}
+                    <input
+                      name="myFile"
+                      class="form-control"
+                      type="file"
+                      id="formFile"
+                      accept=".png, .jpg, .jpeg"
+                    />
+                  </div>
+                  <div class="card-body">
+                    <button type="submit" class="btn btn-primary">
+                      Publish
+                    </button>
+                  </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {{end}}

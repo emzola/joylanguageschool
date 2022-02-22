@@ -20,6 +20,8 @@ type templateData struct {
 	FormErrors  map[string]string
 	Post        *models.Post
 	Posts       []*models.Post
+	Programme   *models.Programme
+	Programmes  []*models.Programme
 }
 
 // Set BlueMonday policy to sanity check user submitted html

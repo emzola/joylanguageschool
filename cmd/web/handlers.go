@@ -8,6 +8,10 @@ import (
 	"joylanguageschool.ru/pkg/validator"
 )
 
+func (app *application) NotFound(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "404.page.tmpl", nil)
+}
+
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
 
 	p, err := app.posts.GetLastThreePosts()
@@ -26,13 +30,13 @@ func (app *application) showTeachers(w http.ResponseWriter, r *http.Request) {
 func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
-		app.notFound(w)
+		app.notFound(w, r)
 		return
 	}
 
 	post, err := app.posts.Get(id)
 	if err == models.ErrNoRecord {
-		app.notFound(w)
+		app.notFound(w, r)
 		return
 	} else if err != nil {
 		app.serverError(w, err)
@@ -52,8 +56,6 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
-
 func (app *application) showPosts(w http.ResponseWriter, r *http.Request) {
 	p, err := app.posts.GetAllPosts()
 	if err != nil {
@@ -64,6 +66,29 @@ func (app *application) showPosts(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "posts.page.tmpl", &templateData{Posts: p})
 }
 
+func (app *application) showProgramme(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(w, r)
+	if err != nil {
+		app.notFound(w, r)
+		return
+	}
+
+	programme, err := app.programmes.Get(id)
+	if err == models.ErrNoRecord {
+		app.notFound(w, r)
+		return
+	} else if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.render(w, r, "programme.page.tmpl", &templateData{
+		Programme: programme,
+	})
+}
+
+
+// Process email fron contact form
 func(app *application) sendMail(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
@@ -109,7 +134,9 @@ func (app *application) showDashboard(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "dashboard.page.tmpl", &templateData{Posts: p})
 }
 
-// Display posts on the dashboard main page
+// Dashboard - Posts handlers
+
+// Display posts on the dashboard
 func (app *application) showAllDashboardPosts(w http.ResponseWriter, r *http.Request) {
 	p, err := app.posts.GetAllPosts()
 	if err != nil {
@@ -163,7 +190,7 @@ func (app *application) createPost(w http.ResponseWriter, r *http.Request) {
 func (app *application) editPostForm(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
-		app.notFound(w)
+		app.notFound(w, r)
 		return
 	}
 
@@ -182,7 +209,7 @@ func (app *application) editPostForm(w http.ResponseWriter, r *http.Request) {
 func(app *application) editPost(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
-		app.notFound(w)
+		app.notFound(w, r)
 		return
 	}
 
@@ -230,13 +257,13 @@ func(app *application) editPost(w http.ResponseWriter, r *http.Request) {
 func (app *application) deletePost (w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
-		app.notFound(w)
+		app.notFound(w, r)
 		return
 	}
 
 	err = app.posts.Delete(id)
 	if err == models.ErrNoRecord {
-		app.notFound(w)
+		app.notFound(w, r)
 		return
 	} else if err != nil {
 		app.clientError(w, http.StatusInternalServerError)
@@ -248,6 +275,148 @@ func (app *application) deletePost (w http.ResponseWriter, r *http.Request) {
 }
 
 
+// Dashboard - Programmes handlers
+
+// Display programmes on the dashboard
+func (app *application) showAllDashboardProgrammes(w http.ResponseWriter, r *http.Request) {
+	p, err := app.programmes.GetAllProgrammes()
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.render(w, r, "dashboardprogrammes.page.tmpl", &templateData{Programmes: p})
+}
+
+// Display create programme form
+func (app *application) createProgrammeForm(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "createprogramme.page.tmpl", nil)
+}
+
+// Create programme
+func (app *application) createProgramme(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, http.StatusBadRequest)
+		return
+	}
+
+	image, _ := app.FileUpload(r)
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+
+	// Validate form fields
+	errors := validator.CreatePost(title, content, image)
+
+	// If there are errors, re-populate the post form and display it again
+	if len(errors) > 0 {
+		app.render(w, r, "createprogramme.page.tmpl", &templateData{
+			FormErrors: errors,
+			FormData:   r.PostForm,
+		})
+		return
+	}
+
+	err = app.programmes.Insert(title, content, image)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(r, "flash", "Programme successfully created")
+	http.Redirect(w, r, "/admin/programmes", http.StatusSeeOther)
+}
+
+// Display edit post form
+func (app *application) editProgrammeForm(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(w, r)
+	if err != nil {
+		app.notFound(w, r)
+		return
+	}
+
+	programme, err := app.programmes.Get(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.render(w, r, "editprogramme.page.tmpl", &templateData{
+		Programme:   programme,
+	})
+}
+
+// Edit Post
+func(app *application) editProgramme(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(w, r)
+	if err != nil {
+		app.notFound(w, r)
+		return
+	}
+
+	image, _ := app.FileUpload(r)
+	title := r.PostForm.Get("title")
+	content := r.PostForm.Get("content")
+
+	// Get post data to use to re-populate form if re-displayed due to error
+	programme, err := app.programmes.Get(id)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	// Validate form fields
+	errors := validator.EditPost(title, content, image)
+
+	// If there are errors, re-populate the post form and display it again
+	if len(errors) > 0 {
+		app.render(w, r, "editprogramme.page.tmpl", &templateData{
+			FormErrors: errors,
+			Programme:   programme,
+		})
+		return
+	}
+
+	// Check if a new image file is uploaded.
+	// If not uploaded, set it's value to value already in the database
+	if image == "" {
+		image = programme.Image
+	}
+
+	// Update post
+	err = app.programmes.Update(id, title, content, image)
+	if err != nil {
+		app.serverError(w, err)
+		return
+	}
+
+	app.session.Put(r, "flash", "Programme successfully updated")
+	http.Redirect(w, r, "/admin/programmes", http.StatusSeeOther)
+}
+
+// Delete post
+func (app *application) deleteProgramme (w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(w, r)
+	if err != nil {
+		app.notFound(w, r)
+		return
+	}
+
+	err = app.programmes.Delete(id)
+	if err == models.ErrNoRecord {
+		app.notFound(w, r)
+		return
+	} else if err != nil {
+		app.clientError(w, http.StatusInternalServerError)
+		return
+	}
+
+	app.session.Put(r, "flash", "Programme successfully deleted")
+	http.Redirect(w, r, "/admin/programmes", http.StatusSeeOther)
+}
+
+
+// User signup and login handlers
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "signup.page.tmpl", nil)
 }
