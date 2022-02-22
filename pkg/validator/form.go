@@ -95,7 +95,7 @@ func ContactForm(name, email, subject, message string) map[string]string {
 
 	if strings.TrimSpace(message) == "" {
 		errors["password"] = "Это поле не может быть пустым"
-	} 
+	}
 
 	return errors
 }

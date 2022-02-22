@@ -12,16 +12,16 @@ import (
 )
 
 type templateData struct {
-	CSRFToken   string
+	CSRFToken         string
 	AuthenticatedUser *models.User
-	CurrentYear int
-	Flash       string
-	FormData    url.Values
-	FormErrors  map[string]string
-	Post        *models.Post
-	Posts       []*models.Post
-	Programme   *models.Programme
-	Programmes  []*models.Programme
+	CurrentYear       int
+	Flash             string
+	FormData          url.Values
+	FormErrors        map[string]string
+	Post              *models.Post
+	Posts             []*models.Post
+	Programme         *models.Programme
+	Programmes        []*models.Programme
 }
 
 // Set BlueMonday policy to sanity check user submitted html
@@ -36,7 +36,7 @@ var functions = template.FuncMap{
 	"humanDate": humanDate,
 	"safeHTML": func(s string) template.HTML {
 		return template.HTML(Policy.Sanitize(s))
-},
+	},
 }
 
 // Create a template cache for templates

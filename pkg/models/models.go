@@ -6,31 +6,31 @@ import (
 )
 
 var (
-ErrNoRecord = errors.New("models: no matching record found")
-ErrInvalidCredentials = errors.New("models: invalid credentials")
-ErrDuplicateEmail = errors.New("models: duplicate email")
+	ErrNoRecord           = errors.New("models: no matching record found")
+	ErrInvalidCredentials = errors.New("models: invalid credentials")
+	ErrDuplicateEmail     = errors.New("models: duplicate email")
 )
 
 type Post struct {
-	ID int
-	Title string
+	ID      int
+	Title   string
 	Content string
-	Image string
+	Image   string
 	Created time.Time
 }
 
 type Programme struct {
-	ID int
-	Title string
+	ID      int
+	Title   string
 	Content string
-	Image string
+	Image   string
 	Created time.Time
 }
 
 type User struct {
-	ID int
-	Name string
-	Email string
+	ID             int
+	Name           string
+	Email          string
 	HashedPassword []byte
-	Created time.Time
+	Created        time.Time
 }

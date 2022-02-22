@@ -28,18 +28,18 @@ func (m *ProgrammeModel) Get(id int) (*models.Programme, error) {
 	query := `SELECT id, title, content, image, created FROM programmes
 						WHERE id = ?`
 
-row := m.DB.QueryRow(query, id)
+	row := m.DB.QueryRow(query, id)
 
-p := &models.Programme{}
+	p := &models.Programme{}
 
-err := row.Scan(&p.ID, &p.Title, &p.Content, &p.Image, &p.Created)
-if err == sql.ErrNoRows {
-	return nil, models.ErrNoRecord
-} else if err != nil {
-	return nil, err
-}
+	err := row.Scan(&p.ID, &p.Title, &p.Content, &p.Image, &p.Created)
+	if err == sql.ErrNoRows {
+		return nil, models.ErrNoRecord
+	} else if err != nil {
+		return nil, err
+	}
 
-return p, nil
+	return p, nil
 }
 
 // Get all posts from database
@@ -153,7 +153,7 @@ func (m *ProgrammeModel) Update(id int, title, content, image string) error {
 	return nil
 }
 
-func (m *ProgrammeModel) Delete (id int) error {
+func (m *ProgrammeModel) Delete(id int) error {
 	if id < 1 {
 		return models.ErrNoRecord
 	}
@@ -176,4 +176,3 @@ func (m *ProgrammeModel) Delete (id int) error {
 
 	return nil
 }
-

@@ -1,6 +1,10 @@
 package mail
 
-import "gopkg.in/gomail.v2"
+import (
+	"os"
+
+	"gopkg.in/gomail.v2"
+)
 
 func SendEmail(name, email, subject, message string) error {
 	m := gomail.NewMessage()
@@ -9,7 +13,7 @@ func SendEmail(name, email, subject, message string) error {
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/plain", message)
 
-	d := gomail.NewDialer("smtp.mailtrap.io", 587, "", "")
+	d := gomail.NewDialer("smtp.mailtrap.io", 587, os.Getenv("SMTPUSERNAME"), os.Getenv("SMTPPASSWORD"))
 
 	if err := d.DialAndSend(m); err != nil {
 		panic(err)

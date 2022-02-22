@@ -51,7 +51,7 @@ func (app *application) showPost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.render(w, r, "post.page.tmpl", &templateData{
-		Post: post,
+		Post:  post,
 		Posts: posts,
 	})
 }
@@ -87,9 +87,8 @@ func (app *application) showProgramme(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-
 // Process email fron contact form
-func(app *application) sendMail(w http.ResponseWriter, r *http.Request) {
+func (app *application) sendMail(w http.ResponseWriter, r *http.Request) {
 	err := r.ParseForm()
 	if err != nil {
 		app.serverError(w, err)
@@ -115,7 +114,7 @@ func(app *application) sendMail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = mail.SendEmail(name, email, subject, message) 
+	err = mail.SendEmail(name, email, subject, message)
 	if err != nil {
 		app.serverError(w, err)
 	}
@@ -201,12 +200,12 @@ func (app *application) editPostForm(w http.ResponseWriter, r *http.Request) {
 	}
 
 	app.render(w, r, "editpost.page.tmpl", &templateData{
-		Post:   post,
+		Post: post,
 	})
 }
 
 // Edit Post
-func(app *application) editPost(w http.ResponseWriter, r *http.Request) {
+func (app *application) editPost(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
 		app.notFound(w, r)
@@ -231,7 +230,7 @@ func(app *application) editPost(w http.ResponseWriter, r *http.Request) {
 	if len(errors) > 0 {
 		app.render(w, r, "editpost.page.tmpl", &templateData{
 			FormErrors: errors,
-			Post:   post,
+			Post:       post,
 		})
 		return
 	}
@@ -254,7 +253,7 @@ func(app *application) editPost(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete post
-func (app *application) deletePost (w http.ResponseWriter, r *http.Request) {
+func (app *application) deletePost(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
 		app.notFound(w, r)
@@ -273,7 +272,6 @@ func (app *application) deletePost (w http.ResponseWriter, r *http.Request) {
 	app.session.Put(r, "flash", "Post successfully deleted")
 	http.Redirect(w, r, "/admin/posts", http.StatusSeeOther)
 }
-
 
 // Dashboard - Programmes handlers
 
@@ -342,12 +340,12 @@ func (app *application) editProgrammeForm(w http.ResponseWriter, r *http.Request
 	}
 
 	app.render(w, r, "editprogramme.page.tmpl", &templateData{
-		Programme:   programme,
+		Programme: programme,
 	})
 }
 
 // Edit Post
-func(app *application) editProgramme(w http.ResponseWriter, r *http.Request) {
+func (app *application) editProgramme(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
 		app.notFound(w, r)
@@ -372,7 +370,7 @@ func(app *application) editProgramme(w http.ResponseWriter, r *http.Request) {
 	if len(errors) > 0 {
 		app.render(w, r, "editprogramme.page.tmpl", &templateData{
 			FormErrors: errors,
-			Programme:   programme,
+			Programme:  programme,
 		})
 		return
 	}
@@ -395,7 +393,7 @@ func(app *application) editProgramme(w http.ResponseWriter, r *http.Request) {
 }
 
 // Delete post
-func (app *application) deleteProgramme (w http.ResponseWriter, r *http.Request) {
+func (app *application) deleteProgramme(w http.ResponseWriter, r *http.Request) {
 	id, err := app.readIDParam(w, r)
 	if err != nil {
 		app.notFound(w, r)
@@ -414,7 +412,6 @@ func (app *application) deleteProgramme (w http.ResponseWriter, r *http.Request)
 	app.session.Put(r, "flash", "Programme successfully deleted")
 	http.Redirect(w, r, "/admin/programmes", http.StatusSeeOther)
 }
-
 
 // User signup and login handlers
 func (app *application) signupUserForm(w http.ResponseWriter, r *http.Request) {

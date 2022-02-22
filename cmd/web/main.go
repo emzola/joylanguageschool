@@ -4,10 +4,8 @@ import (
 	"context"
 	"database/sql"
 	"flag"
-	"fmt"
 	"html/template"
 	"log"
-	"net/http"
 	"os"
 	"time"
 
@@ -49,9 +47,9 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 
 	var secret = "secret"
-	flag.StringVar(&secret, "secret", os.Getenv("SECRET"), "Secret Key")
+	flag.StringVar(&secret, "secret", "", "Secret Key")
 
-	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "MYSQL DSN")
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "MYSQL DSN")
 
 	flag.IntVar(&cfg.db.SetMaxOpenConns, "db-max-open-conns", 25, "MYSQL max open connections")
 	flag.IntVar(&cfg.db.SetMaxIdleConns, "db-max-idle-conns", 25, "MYSQL max idle connections")
@@ -90,16 +88,7 @@ func main() {
 		users:         &mysql.UserModel{DB: db},
 	}
 
-	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      app.routes(),
-		IdleTimeout:  time.Minute,
-		ReadTimeout:  10 * time.Second,
-		WriteTimeout: 30 * time.Second,
-	}
-
-	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)
-	err = srv.ListenAndServe()
+	err = app.serve()
 	if err != nil {
 		logger.Fatal(err)
 	}
