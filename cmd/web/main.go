@@ -48,7 +48,7 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 
 	var secret = "secret"
-	flag.StringVar(&secret, "secret", "s6Ndh+pPbnzHbS*+9Pk8qGWhTzbpa@ge", "Secret Key")
+	flag.StringVar(&secret, "secret", os.Getenv("secret"), "Secret Key")
 
 	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "MYSQL DSN")
 

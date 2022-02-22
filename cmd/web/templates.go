@@ -6,6 +6,8 @@ import (
 	"path/filepath"
 	"time"
 
+	"github.com/microcosm-cc/bluemonday"
+
 	"joylanguageschool.ru/pkg/models"
 )
 
@@ -20,13 +22,19 @@ type templateData struct {
 	Posts       []*models.Post
 }
 
+// Set BlueMonday policy to sanity check user submitted html
+var Policy = bluemonday.UGCPolicy()
+
 // Display a readable human date
 func humanDate(t time.Time) string {
-	return t.Format("Jan 2, 2006")
+	return t.Format("2006-01-02")
 }
 
 var functions = template.FuncMap{
 	"humanDate": humanDate,
+	"safeHTML": func(s string) template.HTML {
+		return template.HTML(Policy.Sanitize(s))
+},
 }
 
 // Create a template cache for templates

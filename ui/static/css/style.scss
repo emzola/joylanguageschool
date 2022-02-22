@@ -58,7 +58,7 @@ $body-font-family: 'Open Sans', sans-serif;
 $heading-font-family: 'Rubik', sans-serif;
 
 $main-color: #d75d58;
-$main-bg: #f1fae9;
+$main-bg: #f5f7fb;
 $optional-color: #ffdecf;
 $white-color: #ffffff;
 $black-color: #434242;
@@ -5911,7 +5911,7 @@ Page Title Area CSS
 .page-title-area {
   position: relative;
   z-index: 1;
-  background-color: #e7fbe3;
+  background-color: $main-bg;
   padding-top: 100px;
   padding-bottom: 100px;
   z-index: 1;
@@ -9327,7 +9327,6 @@ Footer Section CSS
   }
 }
 .copyright-area {
-  margin-top: 40px;
   border-top: 1px solid #eeeeee;
   font-size: 14px;
   padding: {

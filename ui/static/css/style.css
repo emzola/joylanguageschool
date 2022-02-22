@@ -862,7 +862,7 @@ Navbar Area Two CSS
   z-index: 999;
   -webkit-box-shadow: -8px 20px 28px 0 rgba(255, 255, 255, 0.06);
           box-shadow: -8px 20px 28px 0 rgba(255, 255, 255, 0.06);
-  background: #f1fae9;
+  background: #f5f7fb;
   -webkit-animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
           animation: 500ms ease-in-out 0s normal none 1 running fadeInDown;
   -webkit-transition: 0.5s;
@@ -3584,7 +3584,7 @@ Productive Section CSS
 }
 
 .productive-bg {
-  background-color: #f1fae9;
+  background-color: #f5f7fb;
 }
 
 .productive-title {
@@ -4140,7 +4140,7 @@ Startup Home Area CSS
   height: 800px;
   z-index: 1;
   overflow: hidden;
-  background-color: #f1fae9;
+  background-color: #f5f7fb;
 }
 
 .startup-home-area .hero-content h1 {
@@ -6472,7 +6472,7 @@ Page Title Area CSS
 .page-title-area {
   position: relative;
   z-index: 1;
-  background-color: #e7fbe3;
+  background-color: #f5f7fb;
   padding-top: 100px;
   padding-bottom: 100px;
   z-index: 1;
@@ -10134,7 +10134,6 @@ Footer Section CSS
 }
 
 .copyright-area {
-  margin-top: 40px;
   border-top: 1px solid #eeeeee;
   font-size: 14px;
   padding-top: 25px;

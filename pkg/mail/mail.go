@@ -5,7 +5,7 @@ import "gopkg.in/gomail.v2"
 func SendEmail(name, email, subject, message string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", email)
-	m.SetHeader("To", "")
+	m.SetHeader("To", "joylanguagesschool@gmail.com")
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/plain", message)
 

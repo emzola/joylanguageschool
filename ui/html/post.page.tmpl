@@ -30,18 +30,18 @@
                                 <div class="entry-meta">
                                     <ul>
                                         <li>
-                                            <span>Posted on:</span> 
+                                            <span>Дата:</span> 
                                           <a href="{{.Post.ID}}">{{humanDate .Post.Created}}</a>
                                         </li>
                                         <li>
-                                            <span>By:</span> 
+                                            <span>Опубликовано:</span> 
                                             <a href="{{.Post.ID}}">JOY</a>
                                         </li>
                                     </ul>
                                 </div>
                                 <h3>{{.Post.Title}}</h3>
-                                <p>{{.Post.Content}}</p>
-                               </div>                      
+                                <p>{{safeHTML .Post.Content}}</p>
+                            </div>                      
                         </div>
                     </div>
 
@@ -66,5 +66,5 @@
             </div>
         </section>
         <!-- End Blog Details Area -->
-
+{{template "contactTwo" .}}
 {{end}}

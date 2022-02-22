@@ -25,10 +25,10 @@
   .navbar-area-two {
     -webkit-box-shadow: 0 7px 13px 0 rgba(0, 0, 0, 0.1);
             box-shadow: 0 7px 13px 0 rgba(0, 0, 0, 0.1);
-    background-color: #f1fae9;
+    background-color: #f5f7fb;
   }
   .navbar-area-two.is-sticky {
-    background: #f1fae9 !important;
+    background: #f5f7fb !important;
   }
   .default-btn {
     padding: 10px 15px;
@@ -1514,10 +1514,10 @@
   .navbar-area-two {
     -webkit-box-shadow: 0 7px 13px 0 rgba(0, 0, 0, 0.1);
             box-shadow: 0 7px 13px 0 rgba(0, 0, 0, 0.1);
-    background-color: #f1fae9;
+    background-color: #f5f7fb;
   }
   .navbar-area-two.is-sticky {
-    background: #f1fae9 !important;
+    background: #f5f7fb !important;
   }
   .mean-container a.meanmenu-reveal {
     width: 35px;
