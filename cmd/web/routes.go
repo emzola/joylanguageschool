@@ -54,8 +54,8 @@ func (app *application) routes() http.Handler {
 	// router.PathPrefix("/static/").Handler(http.StripPrefix("/static", http.FileServer(http.Dir("./ui/static/"))))
 	// router.PathPrefix("/uploads/").Handler(http.StripPrefix("/uploads", http.FileServer(http.Dir("./uploads/"))))
 
-	router.ServeFiles("/static/*filepath", http.Dir("./ui/static"))
-	router.ServeFiles("/uploads/*filepath", http.Dir("./uploads"))
+	router.ServeFiles("/static/*filepath", neuteredFileSystem{http.Dir("./ui/static")})
+	router.ServeFiles("/uploads/*filepath", neuteredFileSystem{http.Dir("./uploads")})
 
 	return standardMiddleware.Then(router)
 }

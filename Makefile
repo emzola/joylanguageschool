@@ -51,3 +51,13 @@ audit:
 build/web:
 	@echo 'Building cmd/web...'
 	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/web ./cmd/web
+
+# ==================================================================================== #
+# PRODUCTION
+# ==================================================================================== #
+production_host_ip = '137.184.228.246'
+## production/connect: connect to the production server
+.PHONY: production/connect
+production/connect:
+	ssh joy@${production_host_ip}
+

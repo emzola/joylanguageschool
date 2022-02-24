@@ -1,3 +1,5 @@
 .envrc
 uploads/
 bin/
+remote/
+**/Makefile

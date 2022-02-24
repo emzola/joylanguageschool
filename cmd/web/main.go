@@ -46,11 +46,17 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 4000, "HTTP network address")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 
-	var secret = "secret"
-	flag.StringVar(&secret, "secret", "", "Secret Key")
+	var (
+		secret = "secret"
+		smtpUsername = ""
+		smtpPassword = ""
+	)
 
-	flag.StringVar(&cfg.db.dsn, "db-dsn", "", "MYSQL DSN")
+	flag.StringVar(&secret, "secret", os.Getenv("SECRET"), "Secret Key")
+	flag.StringVar(&smtpUsername, "smtp-username", os.Getenv("SMTPUSERNAME"), "SMTP username")
+	flag.StringVar(&smtpPassword, "smtp-password", os.Getenv("SMTPPASSWORD"), "SMTP password")
 
+	flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("JOY_DB_DSN"), "MYSQL DSN")
 	flag.IntVar(&cfg.db.SetMaxOpenConns, "db-max-open-conns", 25, "MYSQL max open connections")
 	flag.IntVar(&cfg.db.SetMaxIdleConns, "db-max-idle-conns", 25, "MYSQL max idle connections")
 	flag.StringVar(&cfg.db.SetMaxIdleTime, "db-max-idle-time", "15m", "MYSQL max connection idle time")
