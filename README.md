@@ -1,6 +1,6 @@
 # JOY Languages School
 
-Back-end service for a website dashboard using Go programming language:
+Back-end service for JOY Languages School admin dashboard using Go programming language:
 https://joylanguageschool.ru/login
 
 ## Features
