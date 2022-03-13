@@ -13,3 +13,9 @@ https://joylanguageschool.ru/login
 <li>Middlewares, Logger </li>
 <li>Graceful shutdown</li>
 </ul>
+
+## Admin Dashboard Screenshot
+
+![alt text](https://snipboard.io/EGthlD.jpg)
+
+![alt text](https://snipboard.io/M6U8gn.jpg)
